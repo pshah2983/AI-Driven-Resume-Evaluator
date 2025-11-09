@@ -1,0 +1,60 @@
+# Core Dependencies
+streamlit>=1.28.0
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Resume Parsing
+pdfplumber>=0.9.0
+PyPDF2>=3.0.0
+python-docx>=1.1.0
+docx2txt>=0.8
+
+# NLP & Text Processing
+spacy>=3.7.0
+nltk>=3.8.0
+regex>=2023.10.0
+
+# Embeddings & Vector Search
+sentence-transformers>=2.2.0
+faiss-cpu>=1.7.4
+# faiss-gpu>=1.7.4  # Uncomment if using GPU
+chromadb>=0.4.0
+
+# LLM Integration
+openai>=1.3.0  # For GPT models (optional)
+transformers>=4.35.0  # For local models
+torch>=2.1.0  # For local LLMs
+accelerate>=0.24.0
+
+# Data Processing
+scikit-learn>=1.3.0
+scipy>=1.11.0
+python-dateutil>=2.8.2
+
+# Configuration & Utilities
+pyyaml>=6.0.1
+python-dotenv>=1.0.0
+pydantic>=2.5.0
+
+# Database (Optional)
+sqlalchemy>=2.0.0
+#sqlite3  # Built-in
+
+# Report Generation
+reportlab
+fpdf
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Code Quality
+black>=23.11.0
+isort>=5.12.0
+mypy>=1.7.0
+flake8>=6.1.0
+
+# Development
+jupyter>=1.0.0
+ipykernel>=6.26.0
+

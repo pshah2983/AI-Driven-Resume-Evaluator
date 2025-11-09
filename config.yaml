@@ -1,0 +1,78 @@
+# AI-Driven Resume Evaluator Configuration
+
+# Scoring Weights (must sum to 100)
+scoring:
+  weights:
+    skill_match: 40
+    experience_match: 25
+    role_responsibility_match: 15
+    education_certifications: 10
+    ats_friendliness: 10
+
+# Embedding Model Configuration
+embeddings:
+  model_name: "sentence-transformers/all-mpnet-base-v2"  # or "all-MiniLM-L6-v2" for faster
+  device: "cpu"  # "cuda" if GPU available
+  batch_size: 32
+
+# Vector Database
+vector_db:
+  type: "faiss"  # "faiss" or "chroma"
+  index_path: "data/indices"
+  dimension: 768  # For all-mpnet-base-v2
+
+# LLM Configuration
+llm:
+  provider: "openai"  # "openai", "huggingface", "local"
+  model_name: "gpt-3.5-turbo"  # or "gpt-4", "llama-2-7b", etc.
+  temperature: 0.7
+  max_tokens: 1000
+  api_key_env: "OPENAI_API_KEY"  # Environment variable name
+
+# Resume Parsing
+parsing:
+  supported_formats: ["pdf", "docx", "doc", "txt"]
+  ocr_enabled: false  # Enable for scanned PDFs
+  extract_images: false
+
+# Normalization
+normalization:
+  skill_taxonomy: "onet"  # "onet" or "custom"
+  date_formats: ["%Y-%m-%d", "%m/%Y", "%Y"]
+  title_similarity_threshold: 0.7
+
+# Privacy & Security
+privacy:
+  persist_data: false  # Default: don't save resumes
+  encryption_enabled: true
+  data_retention_days: 30
+  auto_delete: true
+
+# Feature Flags
+features:
+  batch_processing: true
+  bullet_rewriting: true
+  interview_prep: true
+  role_level_tuning: true
+  diversity_checks: false  # Future feature
+  export_pdf: true
+  export_csv: true
+
+# UI Configuration
+ui:
+  theme: "light"  # "light" or "dark"
+  max_file_size_mb: 10
+  batch_max_files: 100
+
+# Evaluation
+evaluation:
+  test_set_path: "data/test_set"
+  correlation_threshold: 0.7
+  precision_at_k: 10
+
+# Logging
+logging:
+  level: "INFO"  # "DEBUG", "INFO", "WARNING", "ERROR"
+  file: "logs/app.log"
+  console: true
+
