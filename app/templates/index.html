@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Resume Evaluator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-file-alt"></i> AI-Driven Resume Evaluator</h1>
+                <p class="subtitle">Evaluate resumes against job descriptions using AI-powered semantic matching</p>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="tabs">
+            <button class="tab-button active" data-tab="single" onclick="switchTab('single')">
+                <i class="fas fa-user"></i> Single Resume
+            </button>
+            <button class="tab-button" data-tab="batch" onclick="switchTab('batch')">
+                <i class="fas fa-users"></i> Batch Processing
+            </button>
+        </div>
+
+        <!-- Single Resume Tab -->
+        <div id="single-tab" class="tab-content active">
+            <div class="card">
+                <h2><i class="fas fa-clipboard-list"></i> Job Description</h2>
+                <div class="form-group">
+                    <label for="jd-text">Enter or paste job description:</label>
+                    <textarea id="jd-text" rows="8" placeholder="Paste the complete job description here..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="resume-file">Upload Resume:</label>
+                    <div class="file-upload-wrapper">
+                        <input type="file" id="resume-file" accept=".pdf,.docx,.doc,.txt" />
+                        <label for="resume-file" class="file-upload-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Choose file or drag and drop</span>
+                        </label>
+                        <span id="resume-filename" class="file-name"></span>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="evaluateResume()">
+                    <i class="fas fa-rocket"></i> Evaluate Resume
+                </button>
+            </div>
+
+            <!-- Results Section -->
+            <div id="results-section" class="results-section" style="display: none;">
+                <div class="card">
+                    <h2><i class="fas fa-chart-line"></i> Evaluation Results</h2>
+                    
+                    <!-- Overall Score -->
+                    <div class="score-card">
+                        <div class="score-main">
+                            <div class="score-circle" id="overall-score-circle">
+                                <span id="overall-score-value">0</span>
+                                <small>/100</small>
+                            </div>
+                            <div class="score-info">
+                                <h3>Overall Match Score</h3>
+                                <div class="score-rating" id="score-rating"></div>
+                                <p class="confidence">Confidence: <span id="confidence-value">0%</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Breakdown -->
+                    <div class="breakdown-section">
+                        <h3><i class="fas fa-chart-pie"></i> Detailed Breakdown</h3>
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Skill Match</div>
+                                <div class="breakdown-value" id="skill-score">0/100</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="skill-progress"></div>
+                                </div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Experience</div>
+                                <div class="breakdown-value" id="exp-score">0/100</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="exp-progress"></div>
+                                </div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Role Match</div>
+                                <div class="breakdown-value" id="role-score">0/100</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="role-progress"></div>
+                                </div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Education</div>
+                                <div class="breakdown-value" id="edu-score">0/100</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="edu-progress"></div>
+                                </div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">ATS Friendly</div>
+                                <div class="breakdown-value" id="ats-score">0/100</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="ats-progress"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skills Details -->
+                    <div class="details-section">
+                        <div class="details-grid">
+                            <div class="detail-card">
+                                <h4><i class="fas fa-check-circle"></i> Matched Skills</h4>
+                                <div id="matched-skills" class="skill-tags"></div>
+                            </div>
+                            <div class="detail-card">
+                                <h4><i class="fas fa-times-circle"></i> Missing Skills</h4>
+                                <div id="missing-skills" class="skill-tags"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommendations -->
+                    <div class="recommendations-section">
+                        <h3><i class="fas fa-lightbulb"></i> Recommendations</h3>
+                        <div id="summary" class="recommendation-item"></div>
+                        
+                        <div class="recommendation-item">
+                            <h4><i class="fas fa-search"></i> Gap Analysis</h4>
+                            <ul id="gap-analysis"></ul>
+                        </div>
+                        
+                        <div class="recommendation-item">
+                            <h4><i class="fas fa-tasks"></i> Action Items</h4>
+                            <ol id="action-items"></ol>
+                        </div>
+                        
+                        <div class="recommendation-item">
+                            <h4><i class="fas fa-question-circle"></i> Interview Preparation</h4>
+                            <ol id="interview-questions"></ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Batch Processing Tab -->
+        <div id="batch-tab" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-clipboard-list"></i> Job Description</h2>
+                <div class="form-group">
+                    <label for="batch-jd-text">Enter or paste job description:</label>
+                    <textarea id="batch-jd-text" rows="8" placeholder="Paste the complete job description here..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="batch-resume-files">Upload Multiple Resumes:</label>
+                    <div class="file-upload-wrapper">
+                        <input type="file" id="batch-resume-files" accept=".pdf,.docx,.doc,.txt" multiple />
+                        <label for="batch-resume-files" class="file-upload-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Choose files or drag and drop (multiple files)</span>
+                        </label>
+                        <div id="batch-filenames" class="file-names"></div>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="evaluateBatch()">
+                    <i class="fas fa-rocket"></i> Evaluate All Resumes
+                </button>
+            </div>
+
+            <!-- Batch Results Section -->
+            <div id="batch-results-section" class="results-section" style="display: none;">
+                <div class="card">
+                    <h2><i class="fas fa-table"></i> Batch Evaluation Results</h2>
+                    <div id="batch-summary" class="batch-summary"></div>
+                    <div class="table-wrapper">
+                        <table id="batch-results-table" class="results-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Name</th>
+                                    <th>Overall Score</th>
+                                    <th>Skill Score</th>
+                                    <th>Experience Score</th>
+                                    <th>Years Exp.</th>
+                                    <th>Matched Skills</th>
+                                    <th>Missing Skills</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="batch-results-tbody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <button class="btn btn-secondary" onclick="exportBatchCSV()">
+                        <i class="fas fa-download"></i> Export CSV
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="loading-overlay" style="display: none;">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <p id="loading-text">Processing...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
+
